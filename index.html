@@ -68,6 +68,7 @@ Example of local correlation and global-local correlation for the task of egocen
 <h2>Abstract</h2>
 In this paper, we present the first transformer-based model to address the challenging problem of egocentric gaze estimation. We observe that the connection between the global scene context and local visual information is vital for localizing the gaze fixation from egocentric video frames. To this end, we design the transformer encoder to embed the global context as one additional visual token and further propose a novel Global-Local Correlation (GLC) module to explicitly model the correlation of the global token and each local token. We validate our model on two egocentric video datasets -- EGTEA Gaze+ and Ego4D. Our detailed ablation studies demonstrate the benefits of our method. In addition, our approach exceeds previous state-of-the-arts by a large margin. We also provide additional visualizations to support our claim that global-local correlation serves a key representation for predicting gaze fixation from egocentric videos.
 
+<h2>Method</h2>
 <div style="text-align: center;">
   <img src="method.png"  style="width:1100px;height:426px;">
 </div>
@@ -79,8 +80,8 @@ Architecture of the proposed model. The model consists of four modules -- (a) Vi
 <br>
 <hr class="heavy">
 
-<div style="text-align: center;">
 <h2>Demo Video</h2>
+<div style="text-align: center;">
 <video controls="controls" width="720">
   <source src="Demo.mp4" type="video/mp4">
 </video>
