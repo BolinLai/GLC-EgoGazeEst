@@ -1,109 +1,336 @@
-<!--?xml version="1.0" encoding="UTF-8"?-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<title>In the Eye of Transformer: Global-Local Correlation for Egocentric Gaze Estimation</title>
-<meta name="generator" content="Nested http://nestededitor.sourceforge.net/">
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-    menuSettings: {zoom: "Double-Click", zscale: "300%"},
-    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
-    MathMenu: {showRenderer: false},
-    "HTML-CSS": {
-        availableFonts: ["TeX"],
-        preferredFont: "TeX",
-        imageFont: null
-    }
-  });
-</script>
+<html>
+<head>
+<title>In the Eye of Transformer:
+  Global-Local Correlation for Egocentric Gaze Estimation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@200&display=swap" rel="stylesheet"> 
 <style type="text/css">
-    body { background-color: White; font-family: Helvetica, Futura, "Trebuchet MS", sans-serif; width:900px; margin:0 auto;}
-    h1 { color: black; font-family:  Helvetica, Futura, "Trebuchet MS", sans-serif; font-size: 27px; }
-    h2 { color: black; font-family:  Helvetica, Futura, "Trebuchet MS", sans-serif; font-size: 22px}
-    h4 { color: black; font-family:  Helvetica, Futura, "Trebuchet MS", sans-serif; font-size: 15px; font-weight:normal}
-    p { color: black; font-family: Helvetica, Futura, "Trebuchet MS", sans-serif;}
+.content {
+    width:930px;
+    text-align: left;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+}
+h1 {
+    font-weight: 600;
+}
+table.authors {
+    width:90%;
+    text-align:center;
+}
+table.authors > tr > td, table.authors > tbody > tr > td {
+    width:25%;
+}
+.authors a, .lnk {
+    color:rgb(82, 147, 221);
+    font-size:120%;
+    /* text-decoration:underline; */
+}
+.authors a:hover, .lnk:hover {
+    color:gray;
+    font-size:120%;
+    /* text-decoration:underline; */
+}
+.btn {
+    color:black;
+    text-decoration:none;
+}
+.btn:hover {
+    color:gray;
+    text-decoration:none;
+}
+table.demo1 {
+    width:100%;
+    text-align:center;
+}
+.demo1 img {
+    width:300px;
+}
+td.prompt {
+    width:100%;
+    text-align:center;
+    font-family: monospace;
+    font-size:150%;
+}
+td.prompt a {
+    color:#ddd;
+    text-decoration:none;
+}
+td.prompt a:hover, td.prompt a.active {
+    color:black;
+    text-decoration:none;
+}
+.img-stack {
+    position:relative;
+    display: block;
+    width:300px;
+    height:300px;
+}
+.img-stack img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+}
+.img-stack img.active {
+    z-index: 1;
+}
+.img-stack .overlay {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+    transition: opacity .2s;
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: white;
+}
+.carousel {
+    position:relative;
+    width:650px;
+    height:340px;
+    overflow:hidden;
+}
+.carousel > table {
+    position:absolute;
+    top: 0px;
+    transition: left 1s;
+    width:650px;
+}
+.carousel_table td {
+    text-align:center;
+    font-size: 130%;
+}
+.carousel_table td:nth-child(2) {
+    font-size:150%;
+}
+pre {
+    background-color:#eee;
+    border: 1px solid #999;
+    border-radius: 5px;
+    padding: 10px;
+white-space: break-spaces;
+width:80%;
+text-align:left;
+}
+td.gif {
+    width: 33%;
+    font-family: monospace;
+    font-size: 120%;
+}
+.dl_link {
+    display: inline-block;
+    padding-right: 6px;
+    padding-left: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.dl_link, .dl_link td {
+    color: black;
+    text-decoration: none;
+    font-size: 120%;
+}
+.dl_link, .dl_link table {
+    border-radius: 5px;
+    background-color: none;
+}
+.dl_link:hover, .dl_link:hover * {
+    color: #404040 !important;
+    background-color: #d9d9d9 !important;
+}
+@media only screen and (max-width: 930px) {
+    .content { width:100% !important; }
+}
 </style>
+<script type="text/javascript">
+  var curr_idx = 0;
+  var num_tables = 5;
+  function move(direction) {
+      if (curr_idx == 0 && direction < 0) {
+	  move(num_tables - 1);
+	  return;
+      }
+      if (curr_idx == num_tables - 1 && direction > 0) {
+	  move(-1 * (num_tables - 1));
+	  return;
+      }
+      tables = document.getElementsByClassName("carousel_table");
+      for(var i = 0; i < tables.length; i++) {
+	  tables[i].style.left = (parseInt(tables[i].style.left.substring(0, tables[i].style.left.length - 2)) - direction * 650).toString() + "px";
+      }
+      curr_idx += direction;
+  }
+  function hideOverlay(classname) {
+      document.getElementById(classname + "_overlay").style.opacity = "0";
+  }
+  function activate(classname, idx, max) {
+      document.getElementById(classname + "_overlay").style.opacity = "1";
+      setTimeout(function() {
+	  for(var i = 1; i <= max; i++) {
+	      document.getElementById(classname + "_" + i.toString()).className = "";
+	      document.getElementById(classname + "_text_" + i.toString()).className = "";
+	  }
+	  document.getElementById(classname + "_" + idx.toString()).className = "active";
+	  document.getElementById(classname + "_text_" + idx.toString()).className = "active";
+	  setTimeout(hideOverlay, 200, classname);
+      }, 200);
+  }
+  var moving = true;
+  var stopCounter = 0;
+  function autoMove(currCounter) {
+      if(moving && currCounter >= stopCounter) {
+	  move(1);
+          setTimeout(autoMove, 5000, stopCounter);
+      }
+  }
+  function beginMoving() {
+      moving = true;
+      setTimeout(autoMove, 5000, stopCounter);
+  }
+  function stopMoving() {
+      moving = false;
+      stopCounter++;
+  }
+</script>
 </head>
 
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<body dir="ltr" onload="beginMoving();">
+<center><div class="content">
+    <!----------------------------------- Title and Authors ----------------------------------->
+    <center>
+      <br>
+      <br>
+      <h1>In the Eye of Transformer: Global-Local Correlation for Egocentric Gaze Estimation</h1>
+      <table class="authors">
+        <td><span style="font-size: 23px; color:darkred">BMVC, 2022 (Best Student Paper)</span></td>
+      </table>
+      <table class="authors">
+        <td><span style="font-size: 23px; color:darkred">International Journal of Computer Vision (IJCV), 2023</span></td>
+      </table>
+      <!-- <br> -->
+      <br>
+      <table class="authors">
+        <tr>
+          <td><a href="https://bolinlai.github.io/">Bolin Lai</a></td>
+          <td><a href="https://aptx4869lm.github.io/">Miao Liu</a></td>
+          <td><a href="https://fkryan.github.io/">Fiona Ryan</a></td>
+          <td><a href="https://rehg.org/">James M. Rehg</a></td>
+        </tr>
+      </table>
+      <br>
+      <table class="authors">
+        <td><span style="font-size: 19px">Georgia Institute of Technology</span></td>
+      </table>
+      <br>
+      <table class="authors">
+        <td><a href="https://bmvc2022.mpi-inf.mpg.de/0227.pdf">[BMVC Paper]</a> &nbsp;&nbsp;&nbsp; <a href="https://link.springer.com/article/10.1007/s11263-023-01879-7">[IJCV Paper]</a> &nbsp;&nbsp;&nbsp; <a href="https://github.com/BolinLai/GLC">[Code]</a> &nbsp;&nbsp;&nbsp; <a href="https://bolinlai.github.io/GLC-EgoGazeEst/Ego4D_Gaze_Split.zip">[Dataset Split]</a> &nbsp;&nbsp;&nbsp; <a href="https://bmvc2022.mpi-inf.mpg.de/0227_supp.zip">[Supplementary]</a> &nbsp;&nbsp;&nbsp; <a href="https://bmvc2022.mpi-inf.mpg.de/0227_poster.pdf">[Poster]</a></td>
+      </table>
+      <br>
+      <br>
+    </center>
 
-<body><div id="header" class="header" align="center">
-<h1>In the Eye of Transformer: <br />Global-Local Correlation for Egocentric Gaze Estimation</h1>
+    <!----------------------------------- Teaser Image ----------------------------------->
+    <div style="text-align: center;">
+      <img src="figures/teaser.png"  style="width:100%;">
+    </div>
+    <br>
+    <p>
+      Example of local correlation and global-local correlation for the task of egocentric gaze estimation (predicting where the camera-wearer is looking using egocentric video alone). The red dot represents the gaze ground truth (from a wearable eye tracker) and the image patch that contains the gaze target has red edges. Global-local correlation models the connections between the global context and each local patch, making it possible to capture, e.g., the camera wearer and social partner are pointing at the salient object. In contrast, local-local correlations may not yield an effective representation of the scene context.
+    </p>
+    <br>
+    
+    <!----------------------------------- Abstract ----------------------------------->
+    <div id="abstract" style="border-top:1px solid gray;">
+      <h2>Abstract</h2>
+      <p>
+        In this paper, we present the first transformer-based model to address the challenging problem of egocentric gaze estimation. We observe that the connection between the global scene context and local visual information is vital for localizing the gaze fixation from egocentric video frames. To this end, we design the transformer encoder to embed the global context as one additional visual token and further propose a novel Global-Local Correlation (GLC) module to explicitly model the correlation of the global token and each local token. We validate our model on two egocentric video datasets -- EGTEA Gaze+ and Ego4D. Our detailed ablation studies demonstrate the benefits of our method. In addition, our approach exceeds previous state-of-the-arts by a large margin. We also provide additional visualizations to support our claim that global-local correlation serves a key representation for predicting gaze fixation from egocentric videos.
+      </p>
+    </div>
+    <br>
 
-<table style="width:90%">
-  <tbody><tr>
-    <td style="text-align:center"><font size="4"><a href="https://bolinlai.github.io/">Bolin Lai</a> </font></td>
-    <td style="text-align:center"><font size="4"><a href="https://aptx4869lm.github.io/">Miao Liu</a> </font></td>
-    <td style="text-align:center"><font size="4"><a href="https://fkryan.github.io/">Fiona Ryan</a> </font></td>
-    <td style="text-align:center"><font size="4"><a href="https://rehg.org/">James M. Rehg</a></td>
-  </tr>
-  <tr>
-  <td style="text-align:center">Georgia Institute of Technology</td> 
-  <td style="text-align:center">Georgia Institute of Technology</td>
-  <td style="text-align:center">Georgia Institute of Technology</td> 
-  <td style="text-align:center">Georgia Institute of Technology</td> 
-  </tr>
-</tbody></table>
+    <!----------------------------------- Method ----------------------------------->
+    <div id="method" style="border-top:1px solid gray;">
+      <h2>The Proposed Method</h2>
+      <center>
+        <img src="figures/method.png" style="width:100%;">
+      </center>
+      <br>
+      <p>
+        Architecture of the proposed model. The model consists of four modules -- (a) Visual Token Embedding Module encodes the input into local tokens and one global token, (b) Transformer Encoder is composed of multiple regular self-attention and linear layers, (c) Global-Local Correlation Module models the correlation of global and local tokens, and (d) Transformer Decoder maps encoded video features from Transformer Encoder and GLC to gaze prediction.
+      </p>
+    </div>
+    <br>
 
-<p>
-  <!-- <a href="??" style="font-size: 24px;">[code]</a> -->
-  <a style="font-size: 24px;" href="https://bmvc2022.mpi-inf.mpg.de/0227.pdf">[Paper]</a>
-  <a style="font-size: 24px;" href="https://bmvc2022.mpi-inf.mpg.de/0227_supp.zip">[Supplementary]</a> 
-  <a style="font-size: 24px;" href="https://bmvc2022.mpi-inf.mpg.de/0227_poster.pdf">[Poster]</a> 
-  <a style="font-size: 24px;" href="./Ego4D_Gaze_Split.zip">[Dataset Split]</a> 
-  <a style="font-size: 24px;" href="https://github.com/BolinLai/GLC">[Code]</a> <br />
-  <a style="color:#e65e65">Our paper won the Best Student Paper Prize of BMVC2022!</a>
-  
-</p>
+    <!----------------------------------- Demo Video ----------------------------------->
+    <div id="demo" style="border-top:1px solid gray;">
+      <h2>Demo Video</h2>
+      <center>
+        <video controls="controls" width="720">
+          <source src="figures/Demo.mp4" type="video/mp4">
+        </video>
+      </center>
+    </div>
+    <br>
 
+    <!----------------------------------- Experiments ----------------------------------->
+    <div id="visualization_video" style="border-top:1px solid gray;">
+      <h2>Visualization</h2>
+      <center>
+        <img src="figures/demo1.gif" style="width:100%;">
+        <img src="figures/demo2.gif" style="width:100%;">
+      </center>
+    </div>
+    <br>
+    <br>
 
-</div>
+    <!----------------------------------- Visualization ----------------------------------->
+    <div id="visualization_1" style="border-top:1px solid gray;">
+      <h2>Examples</h2>
+      <center>
+        <img src="figures/visualization_1.png" style="width:90%;">
+      </center>
+    </div>
+    <br>
+    <br>
 
-<div style="text-align: center;">
-  <img src="teaser.png"  style="width:800px;height:175px;">
-</div>
+    <div id="visualization_2" style="border-top:1px solid gray;">
+      <h2>Additional Examples</h2>
+      <center>
+        <img src="figures/visualization_2.png" style="width:90%;">
+      </center>
+    </div>
+    <br>
+    <br>
 
-<h4>
-Example of local correlation and global-local correlation for the task of egocentric gaze estimation (predicting where the camera-wearer is looking using egocentric video alone). The red dot represents the gaze ground truth (from a wearable eye tracker) and the image patch that contains the gaze target has red edges. Global-local correlation models the connections between the global context and each local patch, making it possible to capture, e.g., the camera wearer and social partner are pointing at the salient object. In contrast, local-local correlations may not yield an effective representation of the scene context.
-</h4>
+    <!----------------------------------- Bibtex ----------------------------------->
+    <div id="bibtex" style="border-top:1px solid gray;">
+      <h2>BibTeX</h2>
+      <center>
+      <pre><code>@article{lai2022eye,
+        title={In the Eye of Transformer: Global-Local Correlation for Egocentric Gaze Estimation},
+        author={Lai, Bolin and Liu, Miao and Ryan, Fiona and Rehg, James},
+        journal={British Machine Vision Conference},
+        year={2022}
+      }
+      </code></pre>
+      <pre><code>@article{lai2023eye,
+        title={In the eye of transformer: Global--local correlation for egocentric gaze estimation and beyond},
+        author={Lai, Bolin and Liu, Miao and Ryan, Fiona and Rehg, James M},
+        journal={International Journal of Computer Vision},
+        pages={1--18},
+        year={2023},
+        publisher={Springer}
+      }
+      </code></pre>
+      </center>
+    </div>
 
-<h2>Abstract</h2>
-In this paper, we present the first transformer-based model to address the challenging problem of egocentric gaze estimation. We observe that the connection between the global scene context and local visual information is vital for localizing the gaze fixation from egocentric video frames. To this end, we design the transformer encoder to embed the global context as one additional visual token and further propose a novel Global-Local Correlation (GLC) module to explicitly model the correlation of the global token and each local token. We validate our model on two egocentric video datasets -- EGTEA Gaze+ and Ego4D. Our detailed ablation studies demonstrate the benefits of our method. In addition, our approach exceeds previous state-of-the-arts by a large margin. We also provide additional visualizations to support our claim that global-local correlation serves a key representation for predicting gaze fixation from egocentric videos.
+</div></center>
 
-<h2>Method</h2>
-<div style="text-align: center;">
-  <img src="method.png"  style="width:800px;height:426px;">
-</div>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-<h4>
-Architecture of the proposed model. The model consists of four modules -- (a) Visual Token Embedding Module encodes the input into local tokens and one global token, (b) Transformer Encoder is composed of multiple regular self-attention and linear layers, (c) Global-Local Correlation Module models the correlation of global and local tokens, and (d) Transformer Decoder maps encoded video features from Transformer Encoder and GLC to gaze prediction.
-</h4>
-
-<br>
-<hr class="heavy">
-
-<h2>Demo Video</h2>
-<div style="text-align: center;">
-<video controls="controls" width="720">
-  <source src="Demo.mp4" type="video/mp4">
-</video>
-</div>
-<hr class="heavy">
-
-<h2 id="bibtex">Cite</h2>
-
-If you find this work useful in your own research, please consider citing:
-<pre>
-@article{lai2022eye,
-  title={In the Eye of Transformer: Global-Local Correlation for Egocentric Gaze Estimation},
-  author={Lai, Bolin and Liu, Miao and Ryan, Fiona and Rehg, James},
-  journal={British Machine Vision Conference},
-  year={2022}
-}
-</pre>
-
-<h2 id="Contact">Contact</h2>
-For questions about paper, please contact bolin dot lai at gatech dot edu
-<br>
-</body></html>
+</body>
+</html>
